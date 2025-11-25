@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Plataforma de Ejercicios Académicos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1d73ed",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101722",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full">
+<!-- Side Navigation Bar -->
+<aside class="flex h-screen w-64 flex-col bg-white dark:bg-background-dark dark:border-r dark:border-gray-800 shadow-sm">
+<div class="flex h-full min-h-0 flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Plataforma Académica logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA7zWLKYNDtG8dAvs23GVEVLYuk2SSobdKBRAZfpQR80RNxoUNSn1-3qsIPeIByVt4j5cFo6euAkufOuSPLDipyKQl-SpdTSc0mlKrmeF-KJ6FrrA0oH4xul0LN6QrBLmx0LnsweDJdgoGytxDLiShBSatxzgo5Y-8XsEOyIfe_1XMPmK1caOpev88Zkw3PIFFTn2Ze4XIaSY0Ex1o-wOvlEmSheIbUu27DjdGjrOswHuOLxagqhLAOq5qe1BUMLFwIjbkahrd8hV4");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-medium leading-normal">Plataforma Académica</h1>
+<p class="text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">Panel de Administración</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-[#617289] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined">folder_managed</span>
+<p class="text-sm font-medium leading-normal">Gestor de Ejercicios</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#617289] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Usuarios</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#617289] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<p class="text-sm font-medium leading-normal">Analíticas</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#617289] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Configuración</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#617289] dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">Ayuda</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="w-full max-w-7xl mx-auto">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<div class="flex min-w-72 flex-col gap-1">
+<h1 class="text-[#111418] dark:text-white text-3xl font-bold tracking-tight">Gestor de Ejercicios</h1>
+<p class="text-[#617289] dark:text-gray-400 text-base font-normal leading-normal">Administra y sube los archivos de ejercicios para los usuarios.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">upload_file</span>
+<span class="truncate">Subir Nuevo Archivo</span>
+</button>
+</div>
+<div class="bg-white dark:bg-background-dark dark:border dark:border-gray-800 rounded-xl shadow-sm p-4">
+<!-- Search and Toolbar -->
+<div class="flex flex-col md:flex-row justify-between gap-4 px-2 py-3">
+<div class="flex-1">
+<label class="flex flex-col min-w-40 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-10">
+<div class="text-[#617289] dark:text-gray-400 flex border border-r-0 border-gray-200 dark:border-gray-700 bg-background-light dark:bg-gray-900/50 items-center justify-center pl-3 rounded-l-lg">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-gray-700 bg-background-light dark:bg-gray-900/50 h-full placeholder:text-[#617289] dark:placeholder:text-gray-500 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Buscar por nombre de archivo..."/>
+</div>
+</label>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-[#617289] dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 hover:bg-gray-200">
+<span class="material-symbols-outlined text-base">download</span>
+<span class="truncate">Exportar Datos</span>
+</button>
+</div>
+</div>
+<!-- Table -->
+<div class="px-2 py-3 @container">
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-800">
+<th class="px-4 py-3 text-left text-[#617289] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Nombre de Archivo</th>
+<th class="px-4 py-3 text-left text-[#617289] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Fecha de Subida</th>
+<th class="px-4 py-3 text-left text-[#617289] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Descargas</th>
+<th class="px-4 py-3 text-left text-[#617289] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[60px] px-4 py-2 text-[#111418] dark:text-white text-sm font-normal leading-normal">PruebaPlantilla.pdf</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">24/11/2025 21:00</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">1</td>
+<td class="h-[60px] px-4 py-2">
+<button class="text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:underline">Descargar</button>
+</td>
+</tr>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[60px] px-4 py-2 text-[#111418] dark:text-white text-sm font-normal leading-normal">Ejercicio_Contabilidad_Avanzada.docx</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">15/10/2025 14:30</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">128</td>
+<td class="h-[60px] px-4 py-2">
+<button class="text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:underline">Descargar</button>
+</td>
+</tr>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[60px] px-4 py-2 text-[#111418] dark:text-white text-sm font-normal leading-normal">Guia_Estadistica_2024.xlsx</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">02/09/2025 09:15</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">45</td>
+<td class="h-[60px] px-4 py-2">
+<button class="text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:underline">Descargar</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[60px] px-4 py-2 text-[#111418] dark:text-white text-sm font-normal leading-normal">Presentacion_Final.pptx</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">28/08/2025 18:00</td>
+<td class="h-[60px] px-4 py-2 text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">72</td>
+<td class="h-[60px] px-4 py-2">
+<button class="text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:underline">Descargar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

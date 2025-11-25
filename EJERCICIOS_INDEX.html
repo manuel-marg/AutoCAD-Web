@@ -1,684 +1,438 @@
 <!DOCTYPE html>
-<html>
+<html class="light" lang="es">
 <head>
   <base target="_top">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Plataforma de Ejercicios Académicos</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1d73ed",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101722",
+            "card-dark": "#18212f",
+            "border-dark": "#2a3546",
+          },
+          fontFamily: { "display": ["Lexend", "sans-serif"] },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 20px 0;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-content h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-
-    .admin-panel {
-      /* Visibility is controlled by the 'hidden' class */
-    }
-
-    .login-form {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      max-width: 400px;
-      margin: 40px auto;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #2c3e50;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #3498db;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: background 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn:hover {
-      background: #2980b9;
-    }
-
-    .btn-block {
-      display: block;
-      width: 100%;
-    }
-
-    .btn-success {
-      background: #2ecc71;
-    }
-
-    .btn-success:hover {
-      background: #27ae60;
-    }
-
-    .btn-danger {
-      background: #e74c3c;
-    }
-
-    .btn-danger:hover {
-      background: #c0392b;
-    }
-
-    .btn-warning {
-      background: #f39c12;
-    }
-
-    .btn-warning:hover {
-      background: #d35400;
-    }
-
-    .message {
-      padding: 15px;
-      border-radius: 6px;
-      margin: 15px 0;
-      font-weight: 500;
-    }
-
-    .message.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .message.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .message.info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
-    }
-
-    .ejercicios-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin: 30px 0;
-    }
-
-    .ejercicio-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 20px;
-      transition: transform 0.3s, box-shadow 0.3s;
-      border-left: 4px solid #3498db;
-    }
-
-    .ejercicio-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-    }
-
-    .ejercicio-card h3 {
-      color: #2c3e50;
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-    }
-
-    .ejercicio-info {
-      color: #7f8c8d;
-      font-size: 0.9rem;
-      margin-bottom: 15px;
-    }
-
-    .ejercicio-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .action-btn {
-      flex: 1;
-      padding: 8px 12px;
-      font-size: 0.9rem;
-    }
-
-    .upload-form {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      margin: 20px 0;
-    }
-
-    .admin-nav {
-      background: #34495e;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-    }
-
-    .admin-nav button {
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .file-info {
-      margin-top: 10px;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .stats-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin: 20px 0;
-      text-align: center;
-    }
-
-    .stats-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #3498db;
-      margin: 10px 0;
-    }
-
-    .stats-label {
-      color: #7f8c8d;
-      font-size: 1.1rem;
-    }
-
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-      }
-
-      .ejercicios-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ejercicio-actions {
-        flex-direction: column;
-      }
-
-      .admin-nav {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .admin-nav button {
-        margin-right: 0;
-        margin-bottom: 5px;
-      }
-    }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
+    .hidden { display: none; }
   </style>
 </head>
-<body>
-  <header>
-    <div class="header-content">
-      <h1>📚 Plataforma de Ejercicios Académicos</h1>
-      <button id="adminBtn" class="btn btn-warning" onclick="showAdminLogin()">Admin</button>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
+
+  <header class="bg-white dark:bg-card-dark border-b border-gray-200 dark:border-border-dark p-4 shadow-sm sticky top-0 z-10">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-3xl">school</span>
+        <h1 class="text-gray-900 dark:text-white text-xl font-semibold">Plataforma Académica</h1>
+      </div>
+      <button id="adminBtn" onclick="showAdminLogin()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary/10 dark:bg-primary/20 text-primary text-sm font-bold hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+        <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+        <span>Admin</span>
+      </button>
     </div>
   </header>
 
-  <div class="container">
-    <!-- Vista Pública de Ejercicios -->
-    <div id="publicView">
-      <div class="stats-card">
-        <div class="stats-number" id="totalEjercicios">0</div>
-        <div class="stats-label">Total de Ejercicios Disponibles</div>
-      </div>
-      
-      <h2>📝 Ejercicios Disponibles</h2>
-      <div id="loadingPublic" class="message info">Cargando ejercicios...</div>
-      <div id="ejerciciosPublic" class="ejercicios-grid"></div>
-    </div>
+  <main class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
 
-    <!-- Formulario de Login para Admin -->
-    <div id="loginForm" class="login-form hidden">
-      <h2>🔐 Acceso Administrativo</h2>
-      <div class="form-group">
-        <label for="adminUser">Usuario:</label>
-        <input type="text" id="adminUser" placeholder="Ingrese usuario">
-      </div>
-      <div class="form-group">
-        <label for="adminPass">Contraseña:</label>
-        <input type="password" id="adminPass" placeholder="Ingrese contraseña">
-      </div>
-      <button class="btn btn-block" onclick="login()">Iniciar Sesión</button>
-      <button class="btn btn-block btn-danger" onclick="hideAdminView()">Cancelar</button>
-      <div id="loginMessage"></div>
-    </div>
-
-    <!-- Panel de Administración -->
-    <div id="adminPanel" class="admin-panel hidden">
-      <div class="admin-nav">
-        <button class="btn" onclick="showAdminSection('upload')">Subir Ejercicio</button>
-        <button class="btn" onclick="showAdminSection('list')">Lista de Ejercicios</button>
-        <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
-      </div>
-
-      <!-- Sección de Subida -->
-      <div id="uploadSection" class="upload-form hidden">
-        <h2>📤 Subir Nuevo Ejercicio</h2>
-        <div class="form-group">
-          <label for="nombreEjercicio">Nombre del Ejercicio:</label>
-          <input type="text" id="nombreEjercicio" placeholder="Ingrese nombre del ejercicio">
+      <!-- Vista Pública de Ejercicios -->
+      <div id="publicView">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <div class="flex flex-col gap-1">
+            <h1 class="text-gray-900 dark:text-white text-3xl font-bold tracking-tight">Ejercicios Disponibles</h1>
+            <p class="text-gray-600 dark:text-gray-400 text-base">Busca y descarga los materiales que necesites.</p>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="archivoEjercicio">Archivo PDF:</label>
-          <input type="file" id="archivoEjercicio" accept=".pdf">
-          <div id="archivoInfo" class="file-info hidden"></div>
+
+        <div class="bg-white dark:bg-card-dark dark:border dark:border-border-dark rounded-xl shadow-sm p-4">
+          <div class="flex-1 mb-4">
+            <label class="flex flex-col min-w-40 w-full">
+              <div class="flex w-full flex-1 items-stretch rounded-lg h-10">
+                <div class="text-gray-500 dark:text-gray-400 flex border border-r-0 border-gray-200 dark:border-border-dark bg-background-light dark:bg-background-dark items-center justify-center pl-3 rounded-l-lg">
+                  <span class="material-symbols-outlined">search</span>
+                </div>
+                <input id="searchInput" onkeyup="filterTable()" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-200 dark:border-border-dark bg-background-light dark:bg-background-dark h-full placeholder:text-gray-500 px-4 rounded-l-none border-l-0 pl-2 text-sm" placeholder="Buscar por nombre de ejercicio..."/>
+              </div>
+            </label>
+          </div>
+
+          <div id="loadingPublic" class="p-4 text-center text-gray-500">Cargando ejercicios...</div>
+          
+          <div class="overflow-x-auto">
+            <table id="publicTable" class="w-full">
+              <thead>
+                <tr class="border-b border-b-gray-200 dark:border-b-border-dark">
+                  <th class="px-4 py-3 text-left text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Nombre</th>
+                  <th class="px-4 py-3 text-left text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Archivo</th>
+                  <th class="px-4 py-3 text-left text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Fecha de Subida</th>
+                  <th class="px-4 py-3 text-left text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Descargas</th>
+                  <th class="px-4 py-3 text-left text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="ejerciciosPublicBody" class="divide-y divide-gray-200 dark:divide-border-dark">
+              </tbody>
+            </table>
+          </div>
+          <div id="noResults" class="hidden p-4 text-center text-gray-500">No se encontraron ejercicios que coincidan con la búsqueda.</div>
         </div>
-        <button class="btn btn-success" onclick="subirEjercicio()">Subir Ejercicio</button>
-        <div id="uploadMessage"></div>
       </div>
 
-      <!-- Sección de Lista de Ejercicios -->
-      <div id="listSection" class="hidden">
-        <h2>📋 Lista de Ejercicios</h2>
-        <div id="loadingAdmin" class="message info">Cargando ejercicios...</div>
-        <div id="ejerciciosAdmin" class="ejercicios-grid"></div>
+      <!-- Formulario de Login para Admin -->
+      <div id="loginForm" class="hidden fixed inset-0 bg-black/30 z-20 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-card-dark rounded-xl shadow-lg w-full max-w-md p-8">
+          <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Acceso Administrativo</h2>
+          <div class="space-y-4">
+            <div>
+              <label for="adminUser" class="text-sm font-medium text-gray-700 dark:text-gray-300">Usuario</label>
+              <input type="text" id="adminUser" placeholder="admin" class="mt-1 form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary/50 focus:border-primary dark:text-white">
+            </div>
+            <div>
+              <label for="adminPass" class="text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña</label>
+              <input type="password" id="adminPass" placeholder="••••••••" class="mt-1 form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary/50 focus:border-primary dark:text-white">
+            </div>
+          </div>
+          <div id="loginMessage" class="mt-4 text-sm text-center"></div>
+          <div class="mt-6 flex flex-col gap-3">
+            <button onclick="login()" class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">Iniciar Sesión</button>
+            <button onclick="hideAdminView()" class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-gray-200 dark:bg-border-dark text-gray-800 dark:text-gray-200 text-sm font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Cancelar</button>
+          </div>
+        </div>
       </div>
 
-      <div id="adminMessage"></div>
+      <!-- Panel de Administración -->
+      <div id="adminPanel" class="hidden">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <div class="flex flex-col gap-1">
+            <h1 class="text-gray-900 dark:text-white text-3xl font-bold tracking-tight">Panel de Administración</h1>
+            <p class="text-gray-600 dark:text-gray-400 text-base">Gestiona los ejercicios de la plataforma.</p>
+          </div>
+          <button onclick="logout()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-red-500/10 text-red-500 text-sm font-bold hover:bg-red-500/20 transition-colors">
+            <span class="material-symbols-outlined text-base">logout</span>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+
+        <div class="border-b border-gray-200 dark:border-border-dark mb-4">
+          <nav class="-mb-px flex space-x-6" id="admin-nav">
+            <button onclick="showAdminSection('upload')" class="py-4 px-1 border-b-2 border-primary text-primary font-medium text-sm">Subir Ejercicio</button>
+            <button onclick="showAdminSection('list')" class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600 font-medium text-sm">Lista de Ejercicios</button>
+          </nav>
+        </div>
+
+        <div id="adminMessage" class="mb-4"></div>
+
+        <div id="uploadSection" class="bg-white dark:bg-card-dark dark:border dark:border-border-dark rounded-xl shadow-sm p-6">
+          <h2 class="text-xl font-bold mb-4">Subir Nuevo Ejercicio</h2>
+          <div class="space-y-4">
+            <div>
+              <label for="nombreEjercicio" class="text-sm font-medium">Nombre del Ejercicio</label>
+              <input type="text" id="nombreEjercicio" placeholder="Ej. Guía de Cálculo I" class="mt-1 form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary/50 focus:border-primary dark:text-white">
+            </div>
+            <div>
+              <label for="archivoEjercicio" class="text-sm font-medium">Archivo PDF</label>
+              <input type="file" id="archivoEjercicio" accept=".pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+              <div id="archivoInfo" class="hidden mt-2 text-xs p-2 bg-gray-100 dark:bg-background-dark rounded-md"></div>
+            </div>
+            <div class="flex justify-end">
+              <button onclick="subirEjercicio()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">
+                <span class="material-symbols-outlined text-base">upload</span>
+                <span>Subir Ejercicio</span>
+              </button>
+            </div>
+          </div>
+           <div id="uploadMessage" class="mt-4"></div>
+        </div>
+
+        <div id="listSection" class="hidden">
+          <div id="loadingAdmin" class="p-4 text-center text-gray-500">Cargando ejercicios...</div>
+          <div id="ejerciciosAdmin" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Admin cards go here -->
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script>
-    // Estados de la aplicación
     let isAuthenticated = false;
     let ejerciciosData = [];
 
-    // Inicializar la aplicación
     function initializeApp() {
       loadPublicEjercicios();
       document.getElementById('archivoEjercicio').addEventListener('change', handleFileSelect);
     }
 
-    // Cargar ejercicios en la vista pública
     function loadPublicEjercicios() {
+      document.getElementById('loadingPublic').classList.remove('hidden');
       google.script.run
         .withSuccessHandler(function(data) {
-          ejerciciosData = data;
-          displayPublicEjercicios(data);
-          document.getElementById('totalEjercicios').textContent = data.length;
-          document.getElementById('loadingPublic').style.display = 'none';
+          ejerciciosData = data.sort((a, b) => new Date(b.fechaSubida) - new Date(a.fechaSubida));
+          displayPublicEjercicios(ejerciciosData);
+          document.getElementById('loadingPublic').classList.add('hidden');
         })
-        .withFailureHandler(function(error) {
-          showMessage('loadingPublic', 'Error al cargar ejercicios: ' + error, 'error');
-        })
+        .withFailureHandler(error => showMessage('loadingPublic', 'Error al cargar ejercicios: ' + error.message, 'error'))
         .obtenerEjercicios();
     }
 
-    // Mostrar ejercicios en la vista pública
     function displayPublicEjercicios(ejercicios) {
-      const container = document.getElementById('ejerciciosPublic');
-      
+      const tableBody = document.getElementById('ejerciciosPublicBody');
+      tableBody.innerHTML = '';
       if (ejercicios.length === 0) {
-        container.innerHTML = '<div class="message info">No hay ejercicios disponibles aún.</div>';
+        const tr = tableBody.insertRow();
+        tr.innerHTML = `<td colspan="5" class="text-center py-8 text-gray-500">No hay ejercicios disponibles aún.</td>`;
         return;
       }
-
-      let html = '';
       ejercicios.forEach(ejercicio => {
-        html += `
-          <div class="ejercicio-card">
-            <h3>${ejercicio.nombre}</h3>
-            <div class="ejercicio-info">
-              <div><strong>Archivo:</strong> ${ejercicio.nombreOriginal}</div>
-              <div><strong>Subido:</strong> ${ejercicio.fechaSubida}</div>
-              <div><strong>Descargas:</strong> ${ejercicio.descargas}</div>
-            </div>
-            <div class="ejercicio-actions">
-              <button class="btn action-btn" onclick="descargarEjercicio('${ejercicio.id}', '${ejercicio.url}')">📥 Descargar</button>
-            </div>
-          </div>
+        const tr = tableBody.insertRow();
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">${ejercicio.nombre}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${ejercicio.nombreOriginal}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${ejercicio.fechaSubida}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${ejercicio.descargas}</td>
+          <td class="px-4 py-3 text-sm"><button class="font-bold text-primary hover:underline" onclick="descargarEjercicio('${ejercicio.id}', '${ejercicio.url}')">Descargar</button></td>
         `;
       });
-
-      container.innerHTML = html;
     }
 
-    // Manejar la selección de archivo
+    function filterTable() {
+      const filter = document.getElementById("searchInput").value.toUpperCase();
+      const rows = document.getElementById("ejerciciosPublicBody").getElementsByTagName("tr");
+      let found = false;
+      Array.from(rows).forEach(row => {
+        const nameCell = row.getElementsByTagName("td")[0];
+        if (nameCell) {
+          const txtValue = nameCell.textContent || nameCell.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            row.style.display = "";
+            found = true;
+          } else {
+            row.style.display = "none";
+          }
+        }
+      });
+      document.getElementById('noResults').style.display = found || rows.length === 0 ? 'none' : 'block';
+    }
+
     function handleFileSelect(event) {
       const file = event.target.files[0];
+      const infoDiv = document.getElementById('archivoInfo');
       if (file) {
         if (file.type !== 'application/pdf') {
-          showMessage('archivoInfo', 'Solo se permiten archivos PDF', 'error');
-          document.getElementById('archivoInfo').classList.remove('hidden');
+          infoDiv.innerHTML = `<span class="text-red-500">Solo se permiten archivos PDF</span>`;
+          infoDiv.classList.remove('hidden');
           return;
         }
-
-        const fileInfo = `
-          <strong>Archivo seleccionado:</strong> ${file.name}<br>
-          <strong>Tamaño:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
-          <strong>Tipo:</strong> ${file.type}
-        `;
-        document.getElementById('archivoInfo').innerHTML = fileInfo;
-        document.getElementById('archivoInfo').classList.remove('hidden');
+        infoDiv.innerHTML = `Archivo: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        infoDiv.classList.remove('hidden');
       } else {
-        document.getElementById('archivoInfo').classList.add('hidden');
+        infoDiv.classList.add('hidden');
       }
     }
 
-    // Subir ejercicio
     function subirEjercicio() {
       const nombre = document.getElementById('nombreEjercicio').value.trim();
-      const archivoInput = document.getElementById('archivoEjercicio');
-      const file = archivoInput.files[0];
-
-      if (!nombre) {
-        showMessage('uploadMessage', 'Por favor ingrese el nombre del ejercicio', 'error');
-        return;
-      }
-
-      if (!file) {
-        showMessage('uploadMessage', 'Por favor seleccione un archivo PDF', 'error');
-        return;
-      }
-
-      if (file.type !== 'application/pdf') {
-        showMessage('uploadMessage', 'Solo se permiten archivos PDF', 'error');
-        return;
-      }
-
-      // Leer el archivo como base64
+      const file = document.getElementById('archivoEjercicio').files[0];
+      if (!nombre) { showMessage('uploadMessage', 'Por favor ingrese el nombre del ejercicio.', 'error'); return; }
+      if (!file) { showMessage('uploadMessage', 'Por favor seleccione un archivo PDF.', 'error'); return; }
+      if (file.type !== 'application/pdf') { showMessage('uploadMessage', 'Solo se permiten archivos PDF.', 'error'); return; }
+      
       const reader = new FileReader();
       reader.onload = function(e) {
-        const archivoBase64 = e.target.result.split(',')[1]; // Obtener solo la parte base64
-        
         const datos = {
           nombre: nombre,
-          archivoBase64: archivoBase64,
+          archivoBase64: e.target.result.split(',')[1],
           tipoArchivo: file.type,
           nombreOriginal: file.name,
           tamano: file.size
         };
-
+        showMessage('uploadMessage', 'Subiendo archivo, por favor espere...', 'info');
         google.script.run
-          .withSuccessHandler(function(result) {
+          .withSuccessHandler(result => {
             if (result.exito) {
               showMessage('uploadMessage', result.mensaje, 'success');
               document.getElementById('nombreEjercicio').value = '';
               document.getElementById('archivoEjercicio').value = '';
               document.getElementById('archivoInfo').classList.add('hidden');
-              loadPublicEjercicios(); // Actualizar lista pública
-              loadAdminEjercicios(); // Actualizar lista admin
+              loadPublicEjercicios();
+              loadAdminEjercicios();
             } else {
               showMessage('uploadMessage', result.mensaje, 'error');
             }
           })
-          .withFailureHandler(function(error) {
-            showMessage('uploadMessage', 'Error al subir ejercicio: ' + error, 'error');
-          })
+          .withFailureHandler(error => showMessage('uploadMessage', 'Error al subir: ' + error.message, 'error'))
           .subirEjercicio(datos);
       };
       reader.readAsDataURL(file);
     }
 
-    // Descargar ejercicio
     function descargarEjercicio(id, url) {
-      // Registrar la descarga
       google.script.run.registrarDescarga(id);
-      
-      // Abrir el archivo en una nueva pestaña
       window.open(url, '_blank');
     }
 
-    // Mostrar formulario de login admin
     function showAdminLogin() {
       document.getElementById('loginForm').classList.remove('hidden');
-      document.getElementById('publicView').style.display = 'none';
     }
 
-    // Ocultar vista de admin
     function hideAdminView() {
       document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('adminPanel').classList.add('hidden');
-      document.getElementById('publicView').style.display = 'block';
-      clearMessage('loginMessage');
-      clearMessage('adminMessage');
     }
 
-    // Login de administrador
     function login() {
       const usuario = document.getElementById('adminUser').value;
       const contrasena = document.getElementById('adminPass').value;
-
-      if (!usuario || !contrasena) {
-        showMessage('loginMessage', 'Por favor ingrese usuario y contraseña', 'error');
-        return;
-      }
-
+      if (!usuario || !contrasena) { showMessage('loginMessage', 'Ingrese usuario y contraseña.', 'error'); return; }
+      
+      showMessage('loginMessage', 'Autenticando...', 'info');
       google.script.run
-        .withSuccessHandler(function(result) {
+        .withSuccessHandler(result => {
           if (result.autenticado) {
             isAuthenticated = true;
+            document.getElementById('publicView').classList.add('hidden');
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('publicView').style.display = 'none';
-            showMessage('loginMessage', result.mensaje, 'success');
             loadAdminEjercicios();
           } else {
             showMessage('loginMessage', result.mensaje, 'error');
           }
         })
-        .withFailureHandler(function(error) {
-          showMessage('loginMessage', 'Error en la autenticación: ' + error, 'error');
-        })
+        .withFailureHandler(error => showMessage('loginMessage', 'Error de autenticación: ' + error.message, 'error'))
         .autenticar(usuario, contrasena);
     }
 
-    // Logout de administrador
     function logout() {
       isAuthenticated = false;
       document.getElementById('adminPanel').classList.add('hidden');
-      document.getElementById('publicView').style.display = 'block';
-      clearMessage('adminMessage');
+      document.getElementById('publicView').classList.remove('hidden');
+      clearMessage('loginMessage');
     }
 
-    // Mostrar sección de admin
     function showAdminSection(section) {
-      document.getElementById('uploadSection').classList.add('hidden');
-      document.getElementById('listSection').classList.add('hidden');
-      
-      if (section === 'upload') {
-        document.getElementById('uploadSection').classList.remove('hidden');
-      } else if (section === 'list') {
-        document.getElementById('listSection').classList.remove('hidden');
-        loadAdminEjercicios();
-      }
+        const buttons = document.querySelectorAll('#admin-nav button');
+        buttons.forEach(button => {
+            button.classList.remove('border-primary', 'text-primary');
+            button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        });
+        const selectedButton = document.querySelector(`#admin-nav button[onclick="showAdminSection('${section}')"]`);
+        selectedButton.classList.add('border-primary', 'text-primary');
+        selectedButton.classList.remove('border-transparent', 'text-gray-500');
+
+        document.getElementById('uploadSection').classList.add('hidden');
+        document.getElementById('listSection').classList.add('hidden');
+        if (section === 'upload') {
+            document.getElementById('uploadSection').classList.remove('hidden');
+        } else if (section === 'list') {
+            document.getElementById('listSection').classList.remove('hidden');
+            loadAdminEjercicios();
+        }
     }
 
-    // Cargar ejercicios en la vista de admin
     function loadAdminEjercicios() {
-      document.getElementById('loadingAdmin').style.display = 'block';
-      
+      document.getElementById('loadingAdmin').classList.remove('hidden');
       google.script.run
-        .withSuccessHandler(function(data) {
-          ejerciciosData = data;
-          displayAdminEjercicios(data);
-          document.getElementById('loadingAdmin').style.display = 'none';
+        .withSuccessHandler(data => {
+          displayAdminEjercicios(data.sort((a, b) => new Date(b.fechaSubida) - new Date(a.fechaSubida)));
+          document.getElementById('loadingAdmin').classList.add('hidden');
         })
-        .withFailureHandler(function(error) {
-          showMessage('adminMessage', 'Error al cargar ejercicios: ' + error, 'error');
-          document.getElementById('loadingAdmin').style.display = 'none';
-        })
+        .withFailureHandler(error => showMessage('loadingAdmin', 'Error al cargar: ' + error.message, 'error'))
         .obtenerEjercicios();
     }
 
-    // Mostrar ejercicios en la vista de admin
     function displayAdminEjercicios(ejercicios) {
       const container = document.getElementById('ejerciciosAdmin');
-      
+      container.innerHTML = '';
       if (ejercicios.length === 0) {
-        container.innerHTML = '<div class="message info">No hay ejercicios registrados.</div>';
+        container.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500">No hay ejercicios registrados.</div>`;
         return;
       }
-
-      let html = '';
       ejercicios.forEach(ejercicio => {
-        html += `
-          <div class="ejercicio-card">
-            <h3>${ejercicio.nombre}</h3>
-            <div class="ejercicio-info">
-              <div><strong>Archivo:</strong> ${ejercicio.nombreOriginal}</div>
-              <div><strong>Subido:</strong> ${ejercicio.fechaSubida}</div>
-              <div><strong>Descargas:</strong> ${ejercicio.descargas}</div>
-            </div>
-            <div class="ejercicio-actions">
-              <button class="btn action-btn btn-warning" onclick="editarEjercicio('${ejercicio.id}')">✏️ Editar</button>
-              <button class="btn action-btn btn-danger" onclick="eliminarEjercicio('${ejercicio.id}')">🗑️ Eliminar</button>
-              <button class="btn action-btn" onclick="descargarEjercicio('${ejercicio.id}', '${ejercicio.url}')">📥 Descargar</button>
-            </div>
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-card-dark dark:border dark:border-border-dark rounded-xl shadow-sm p-4 flex flex-col';
+        card.innerHTML = `
+          <h3 class="font-bold text-gray-900 dark:text-white mb-2">${ejercicio.nombre}</h3>
+          <div class="text-xs text-gray-500 dark:text-gray-400 space-y-1 flex-grow">
+            <p><strong>Archivo:</strong> ${ejercicio.nombreOriginal}</p>
+            <p><strong>Subido:</strong> ${ejercicio.fechaSubida}</p>
+            <p><strong>Descargas:</strong> ${ejercicio.descargas}</p>
+          </div>
+          <div class="mt-4 flex gap-2">
+            <button onclick="editarEjercicio('${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-yellow-500/10 text-yellow-600 text-xs font-bold hover:bg-yellow-500/20 transition-colors">
+              <span class="material-symbols-outlined text-sm">edit</span><span>Editar</span>
+            </button>
+            <button onclick="eliminarEjercicio('${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-red-500/10 text-red-500 text-xs font-bold hover:bg-red-500/20 transition-colors">
+              <span class="material-symbols-outlined text-sm">delete</span><span>Eliminar</span>
+            </button>
           </div>
         `;
+        container.appendChild(card);
       });
-
-      container.innerHTML = html;
     }
 
-    // Editar ejercicio
     function editarEjercicio(id) {
       const ejercicio = ejerciciosData.find(e => e.id === id);
-      if (!ejercicio) {
-        showMessage('adminMessage', 'Ejercicio no encontrado', 'error');
-        return;
-      }
-
+      if (!ejercicio) { showMessage('adminMessage', 'Ejercicio no encontrado', 'error'); return; }
       const nuevoNombre = prompt('Editar nombre del ejercicio:', ejercicio.nombre);
-      if (nuevoNombre !== null && nuevoNombre.trim() !== '') {
-        const datos = {
-          id: id,
-          nombre: nuevoNombre.trim()
-        };
-
+      if (nuevoNombre && nuevoNombre.trim() !== '') {
         google.script.run
-          .withSuccessHandler(function(result) {
+          .withSuccessHandler(result => {
             if (result.exito) {
-              showMessage('adminMessage', result.mensaje, 'success');
+              showMessage('adminMessage', 'Ejercicio actualizado.', 'success');
               loadAdminEjercicios();
-              loadPublicEjercicios(); // Actualizar también la vista pública
+              loadPublicEjercicios();
             } else {
               showMessage('adminMessage', result.mensaje, 'error');
             }
           })
-          .withFailureHandler(function(error) {
-            showMessage('adminMessage', 'Error al actualizar ejercicio: ' + error, 'error');
-          })
-          .actualizarEjercicio(datos);
+          .withFailureHandler(error => showMessage('adminMessage', 'Error al actualizar: ' + error.message, 'error'))
+          .actualizarEjercicio({ id: id, nombre: nuevoNombre.trim() });
       }
     }
 
-    // Eliminar ejercicio
     function eliminarEjercicio(id) {
-      if (confirm('¿Está seguro que desea eliminar este ejercicio? Esta acción no se puede deshacer.')) {
+      if (confirm('¿Está seguro que desea eliminar este ejercicio?')) {
         google.script.run
-          .withSuccessHandler(function(result) {
+          .withSuccessHandler(result => {
             if (result.exito) {
-              showMessage('adminMessage', result.mensaje, 'success');
+              showMessage('adminMessage', 'Ejercicio eliminado.', 'success');
               loadAdminEjercicios();
-              loadPublicEjercicios(); // Actualizar también la vista pública
+              loadPublicEjercicios();
             } else {
               showMessage('adminMessage', result.mensaje, 'error');
             }
           })
-          .withFailureHandler(function(error) {
-            showMessage('adminMessage', 'Error al eliminar ejercicio: ' + error, 'error');
-          })
+          .withFailureHandler(error => showMessage('adminMessage', 'Error al eliminar: ' + error.message, 'error'))
           .eliminarEjercicio(id);
       }
     }
 
-    // Mostrar mensaje
     function showMessage(containerId, message, type) {
-      const container = document.getElementById(containerId);
-      let className = 'message';
-      
-      switch(type) {
-        case 'success': className += ' success'; break;
-        case 'error': className += ' error'; break;
-        case 'info': className += ' info'; break;
-      }
-      
-      container.innerHTML = `<div class="${className}">${message}</div>`;
+        const el = document.getElementById(containerId);
+        let color = 'blue';
+        if (type === 'error') color = 'red';
+        if (type === 'success') color = 'green';
+        el.innerHTML = `<div class="text-${color}-500 text-sm">${message}</div>`;
     }
 
-    // Limpiar mensaje
     function clearMessage(containerId) {
       document.getElementById(containerId).innerHTML = '';
     }
 
-    // Inicializar la aplicación cuando se carge la página
     document.addEventListener('DOMContentLoaded', initializeApp);
   </script>
 </body>
