@@ -10,6 +10,7 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     tailwind.config = {
       darkMode: "class",
@@ -470,104 +471,152 @@
       });
     }
 
-        function editarEjercicio(button, id) {
+            function editarEjercicio(button, id) {
 
-          const ejercicio = ejerciciosData.find(e => e.id === id);
+              const ejercicio = ejerciciosData.find(e => e.id === id);
 
-          if (!ejercicio) { showMessage('adminMessage', 'Ejercicio no encontrado', 'error'); return; }
+              if (!ejercicio) { 
 
-          const nuevoNombre = prompt('Editar nombre del ejercicio:', ejercicio.nombre);
+                showMessage('adminMessage', 'Ejercicio no encontrado', 'error'); 
 
-          if (nuevoNombre && nuevoNombre.trim() !== '') {
+                return; 
 
-    
+              }
 
-            const originalButtonContent = button.innerHTML;
+        
 
-            const deleteButton = button.nextElementSibling;
+              Swal.fire({
 
-            button.disabled = true;
+                title: 'Editar nombre del ejercicio',
 
-            deleteButton.disabled = true;
+                input: 'text',
 
-            button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+                inputValue: ejercicio.nombre,
 
-    
+                showCancelButton: true,
 
-            google.script.run
+                confirmButtonText: 'Actualizar',
 
-              .withSuccessHandler(result => {
+                cancelButtonText: 'Cancelar',
 
-                if (result.exito) {
+                confirmButtonColor: '#1d73ed',
 
-                  showMessage('adminMessage', 'Ejercicio actualizado.', 'success');
+                cancelButtonColor: '#6e7881',
 
-                  loadAdminEjercicios();
+                inputValidator: (value) => {
 
-                  loadPublicEjercicios();
+                  if (!value || value.trim().length < 2) {
 
-                } else {
+                    return 'El nombre debe tener al menos 2 caracteres';
 
-                  button.disabled = false;
-
-                  deleteButton.disabled = false;
-
-                  button.innerHTML = originalButtonContent;
-
-                  showMessage('adminMessage', result.mensaje, 'error');
+                  }
 
                 }
 
-              })
+              }).then((result) => {
 
-              .withFailureHandler(error => {
+                if (result.isConfirmed && result.value) {
 
-                button.disabled = false;
+                  const nuevoNombre = result.value.trim();
 
-                deleteButton.disabled = false;
+                  const originalButtonContent = button.innerHTML;
 
-                button.innerHTML = originalButtonContent;
+                  const deleteButton = button.nextElementSibling;
 
-                showMessage('adminMessage', 'Error al actualizar: ' + error.message, 'error');
+                  button.disabled = true;
 
-              })
+                  deleteButton.disabled = true;
 
-              .actualizarEjercicio({ id: id, nombre: nuevoNombre.trim() });
+                  button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
 
-          }
+        
 
-        }
+                  google.script.run
+
+                    .withSuccessHandler(res => {
+
+                      if (res.exito) {
+
+                        Swal.fire('¡Actualizado!', 'El ejercicio ha sido actualizado.', 'success');
+
+                        loadAdminEjercicios();
+
+                        loadPublicEjercicios();
+
+                      } else {
+
+                        button.disabled = false;
+
+                        deleteButton.disabled = false;
+
+                        button.innerHTML = originalButtonContent;
+
+                        showMessage('adminMessage', res.mensaje, 'error');
+
+                      }
+
+                    })
+
+                    .withFailureHandler(error => {
+
+                      button.disabled = false;
+
+                      deleteButton.disabled = false;
+
+                      button.innerHTML = originalButtonContent;
+
+                      showMessage('adminMessage', 'Error al actualizar: ' + error.message, 'error');
+
+                    })
+
+                    .actualizarEjercicio({ id: id, nombre: nuevoNombre });
+
+                }
+
+              });
+
+            }
 
     function eliminarEjercicio(button, id) {
-      if (confirm('¿Está seguro que desea eliminar este ejercicio?')) {
-        
-        const originalButtonContent = button.innerHTML;
-        const editButton = button.previousElementSibling;
-        button.disabled = true;
-        editButton.disabled = true;
-        button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede revertir.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6e7881',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const originalButtonContent = button.innerHTML;
+          const editButton = button.previousElementSibling;
+          button.disabled = true;
+          editButton.disabled = true;
+          button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
 
-        google.script.run
-          .withSuccessHandler(result => {
-            if (result.exito) {
-              showMessage('adminMessage', 'Ejercicio eliminado.', 'success');
-              loadAdminEjercicios();
-              loadPublicEjercicios();
-            } else {
+          google.script.run
+            .withSuccessHandler(res => {
+              if (res.exito) {
+                Swal.fire('¡Eliminado!', 'El ejercicio ha sido eliminado.', 'success');
+                loadAdminEjercicios();
+                loadPublicEjercicios();
+              } else {
+                button.disabled = false;
+                editButton.disabled = false;
+                button.innerHTML = originalButtonContent;
+                showMessage('adminMessage', res.mensaje, 'error');
+              }
+            })
+            .withFailureHandler(error => {
               button.disabled = false;
               editButton.disabled = false;
               button.innerHTML = originalButtonContent;
-              showMessage('adminMessage', result.mensaje, 'error');
-            }
-          })
-          .withFailureHandler(error => {
-            button.disabled = false;
-            editButton.disabled = false;
-            button.innerHTML = originalButtonContent;
-            showMessage('adminMessage', 'Error al eliminar: ' + error.message, 'error');
-          })
-          .eliminarEjercicio(id);
-      }
+              showMessage('adminMessage', 'Error al eliminar: ' + error.message, 'error');
+            })
+            .eliminarEjercicio(id);
+        }
+      });
     }
 
     function showMessage(containerId, message, type) {
