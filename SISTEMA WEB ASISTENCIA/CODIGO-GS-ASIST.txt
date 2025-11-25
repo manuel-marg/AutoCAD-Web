@@ -1,0 +1,183 @@
+const HOJA_ID = '1s-hqY8QRK2KMtvndUWQx3KXFZrxE_uwhKcaXGNA8WdE';
+const NOMBRE_HOJA_DATOS = 'datos';
+const NOMBRE_HOJA_BASE = 'base';
+
+const TIEMPO_ESPERA_MINUTOS = 5;
+
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile("index")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function buscarEmpleado(id) {
+  try {
+    const ss = SpreadsheetApp.openById(HOJA_ID);
+    let hojaBase = ss.getSheetByName(NOMBRE_HOJA_BASE);
+    
+    if (!hojaBase) {
+      hojaBase = ss.insertSheet(NOMBRE_HOJA_BASE);
+      hojaBase.appendRow(['ID', 'APELLIDOS Y NOMBRES', 'AGENCIA AREA', 'CARGO']);
+      const datosPrueba = [
+        ['001', 'GARCÍA PÉREZ JUAN CARLOS', 'ADMINISTRACIÓN', 'GERENTE'],
+        ['002', 'RODRÍGUEZ LÓPEZ MARÍA ELENA', 'VENTAS', 'EJECUTIVA'],
+        ['003', 'MARTÍNEZ TORRES PEDRO LUIS', 'SISTEMAS', 'ANALISTA'],
+        ['004', 'LÓPEZ SANTOS ANA CRISTINA', 'RECURSOS HUMANOS', 'COORDINADORA']
+      ];
+      hojaBase.getRange(2, 1, datosPrueba.length, 4).setValues(datosPrueba);
+      return { encontrado: false, mensaje: 'Hoja base creada con datos de prueba' };
+    }
+    
+    const datos = hojaBase.getDataRange().getValues();
+    const idBuscado = id.toString().trim().toUpperCase();
+    
+    const empleado = datos.slice(1).find(fila => 
+      fila[0] && fila[0].toString().trim().toUpperCase() === idBuscado
+    );
+    
+    return empleado ? {
+      encontrado: true,
+      datos: { id: empleado[0], nombre: empleado[1], area: empleado[2], cargo: empleado[3] }
+    } : { encontrado: false, mensaje: 'Empleado no encontrado' };
+  } catch (error) {
+    return { encontrado: false, mensaje: 'Error al buscar empleado: ' + error.message };
+  }
+}
+
+function registrarAsistencia(data) {
+  try {
+    const ss = SpreadsheetApp.openById(HOJA_ID);
+    let hoja = ss.getSheetByName(NOMBRE_HOJA_DATOS);
+    
+    if (!hoja) {
+      hoja = ss.insertSheet(NOMBRE_HOJA_DATOS);
+      hoja.appendRow(['Fecha/Hora', 'ID', 'Nombre', 'Área', 'Cargo', 'Estado']);
+    }
+    
+    const fecha = new Date();
+    const fechaFormateada = Utilities.formatDate(fecha, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
+    const horaFormateada = Utilities.formatDate(fecha, 'America/Lima', 'HH:mm:ss');
+    
+    const validacion = validarDobleRegistro(hoja, data.id, data.estado);
+    if (!validacion.permitido) {
+      return { exito: false, mensaje: validacion.mensaje, hora: horaFormateada };
+    }
+    
+    hoja.appendRow([fechaFormateada, data.id, data.nombre, data.area, data.cargo, data.estado]);
+    
+    return {
+      exito: true,
+      mensaje: `${data.estado} registrado correctamente`,
+      hora: horaFormateada
+    };
+  } catch (error) {
+    return {
+      exito: false,
+      mensaje: `Error al registrar: ${error.message}`,
+      hora: new Date().toLocaleTimeString('es-PE')
+    };
+  }
+}
+
+function validarDobleRegistro(hoja, id, estado) {
+  try {
+    const datos = hoja.getDataRange().getValues();
+    if (datos.length < 2) return { permitido: true };
+    
+    const ahora = new Date();
+    const tiempoEsperaMilisegundos = TIEMPO_ESPERA_MINUTOS * 60 * 1000;
+    const inicioRevision = Math.max(1, datos.length - 50);
+    
+    for (let i = datos.length - 1; i >= inicioRevision; i--) {
+      const fila = datos[i];
+      
+      if (fila[1] && fila[1].toString() === id.toString() && fila[5] === estado) {
+        const fechaRegistro = new Date(fila[0]);
+        const diferencia = ahora.getTime() - fechaRegistro.getTime();
+        
+        if (diferencia < tiempoEsperaMilisegundos) {
+          const minutosRestantes = Math.ceil((tiempoEsperaMilisegundos - diferencia) / 60000);
+          return {
+            permitido: false,
+            mensaje: `Empleado ya se registró, intente pasado los ${minutosRestantes} minutos`
+          };
+        }
+        break;
+      }
+    }
+    
+    return { permitido: true };
+  } catch (error) {
+    console.error('Error en validarDobleRegistro:', error);
+    return { permitido: true };
+  }
+}
+
+function obtenerEstadisticasHoy() {
+  try {
+    const ss = SpreadsheetApp.openById(HOJA_ID);
+    const hoja = ss.getSheetByName(NOMBRE_HOJA_DATOS);
+    
+    if (!hoja) return { error: 'No hay datos de asistencia' };
+    
+    const datos = hoja.getDataRange().getValues();
+    const hoy = new Date();
+    const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    const finHoy = new Date(inicioHoy.getTime() + 24 * 60 * 60 * 1000);
+    
+    let ingresosHoy = 0;
+    let salidasHoy = 0;
+    const empleadosHoy = new Set();
+    
+    datos.slice(1).forEach(fila => {
+      const fechaRegistro = new Date(fila[0]);
+      if (fechaRegistro >= inicioHoy && fechaRegistro < finHoy) {
+        empleadosHoy.add(fila[1]);
+        if (fila[5] === 'INGRESO') ingresosHoy++;
+        if (fila[5] === 'SALIDA') salidasHoy++;
+      }
+    });
+    
+    return {
+      fecha: Utilities.formatDate(hoy, 'America/Lima', 'dd/MM/yyyy'),
+      ingresosHoy,
+      salidasHoy,
+      empleadosUnicos: empleadosHoy.size,
+      totalRegistros: ingresosHoy + salidasHoy
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+function obtenerUltimosRegistros(limite = 10) {
+  try {
+    const ss = SpreadsheetApp.openById(HOJA_ID);
+    const hoja = ss.getSheetByName(NOMBRE_HOJA_DATOS);
+    
+    if (!hoja) return { error: 'No hay datos de asistencia' };
+    
+    const datos = hoja.getDataRange().getValues();
+    const hoy = new Date();
+    const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    const registrosHoy = [];
+    
+    for (let i = datos.length - 1; i >= 1 && registrosHoy.length < limite; i--) {
+      const fila = datos[i];
+      const fechaRegistro = new Date(fila[0]);
+      
+      if (fechaRegistro >= inicioHoy) {
+        registrosHoy.push({
+          hora: Utilities.formatDate(fechaRegistro, 'America/Lima', 'HH:mm:ss'),
+          id: fila[1],
+          nombre: fila[2],
+          area: fila[3],
+          estado: fila[5]
+        });
+      }
+    }
+    
+    return { registros: registrosHoy };
+  } catch (error) {
+    return { error: error.message };
+  }
+}

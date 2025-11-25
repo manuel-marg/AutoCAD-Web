@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <title>Plataforma de Ejercicios Académicos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-content h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .admin-panel {
+      display: none;
+    }
+
+    .login-form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 40px auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+    }
+
+    .btn-block {
+      display: block;
+      width: 100%;
+    }
+
+    .btn-success {
+      background: #2ecc71;
+    }
+
+    .btn-success:hover {
+      background: #27ae60;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .btn-warning {
+      background: #f39c12;
+    }
+
+    .btn-warning:hover {
+      background: #d35400;
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      font-weight: 500;
+    }
+
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .message.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .ejercicios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .ejercicio-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-left: 4px solid #3498db;
+    }
+
+    .ejercicio-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+
+    .ejercicio-card h3 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .ejercicio-info {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .ejercicio-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .upload-form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin: 20px 0;
+    }
+
+    .admin-nav {
+      background: #34495e;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .admin-nav button {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .file-info {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .stats-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3498db;
+      margin: 10px 0;
+    }
+
+    .stats-label {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      .ejercicios-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ejercicio-actions {
+        flex-direction: column;
+      }
+
+      .admin-nav {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .admin-nav button {
+        margin-right: 0;
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>📚 Plataforma de Ejercicios Académicos</h1>
+      <button id="adminBtn" class="btn btn-warning" onclick="showAdminLogin()">Admin</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Vista Pública de Ejercicios -->
+    <div id="publicView">
+      <div class="stats-card">
+        <div class="stats-number" id="totalEjercicios">0</div>
+        <div class="stats-label">Total de Ejercicios Disponibles</div>
+      </div>
+      
+      <h2>📝 Ejercicios Disponibles</h2>
+      <div id="loadingPublic" class="message info">Cargando ejercicios...</div>
+      <div id="ejerciciosPublic" class="ejercicios-grid"></div>
+    </div>
+
+    <!-- Formulario de Login para Admin -->
+    <div id="loginForm" class="login-form hidden">
+      <h2>🔐 Acceso Administrativo</h2>
+      <div class="form-group">
+        <label for="adminUser">Usuario:</label>
+        <input type="text" id="adminUser" placeholder="Ingrese usuario">
+      </div>
+      <div class="form-group">
+        <label for="adminPass">Contraseña:</label>
+        <input type="password" id="adminPass" placeholder="Ingrese contraseña">
+      </div>
+      <button class="btn btn-block" onclick="login()">Iniciar Sesión</button>
+      <button class="btn btn-block btn-danger" onclick="hideAdminView()">Cancelar</button>
+      <div id="loginMessage"></div>
+    </div>
+
+    <!-- Panel de Administración -->
+    <div id="adminPanel" class="admin-panel">
+      <div class="admin-nav">
+        <button class="btn" onclick="showAdminSection('upload')">Subir Ejercicio</button>
+        <button class="btn" onclick="showAdminSection('list')">Lista de Ejercicios</button>
+        <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
+      </div>
+
+      <!-- Sección de Subida -->
+      <div id="uploadSection" class="upload-form">
+        <h2>📤 Subir Nuevo Ejercicio</h2>
+        <div class="form-group">
+          <label for="nombreEjercicio">Nombre del Ejercicio:</label>
+          <input type="text" id="nombreEjercicio" placeholder="Ingrese nombre del ejercicio">
+        </div>
+        <div class="form-group">
+          <label for="archivoEjercicio">Archivo PDF:</label>
+          <input type="file" id="archivoEjercicio" accept=".pdf">
+          <div id="archivoInfo" class="file-info hidden"></div>
+        </div>
+        <button class="btn btn-success" onclick="subirEjercicio()">Subir Ejercicio</button>
+        <div id="uploadMessage"></div>
+      </div>
+
+      <!-- Sección de Lista de Ejercicios -->
+      <div id="listSection" class="hidden">
+        <h2>📋 Lista de Ejercicios</h2>
+        <div id="loadingAdmin" class="message info">Cargando ejercicios...</div>
+        <div id="ejerciciosAdmin" class="ejercicios-grid"></div>
+      </div>
+
+      <div id="adminMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    // Estados de la aplicación
+    let isAuthenticated = false;
+    let ejerciciosData = [];
+
+    // Inicializar la aplicación
+    function initializeApp() {
+      loadPublicEjercicios();
+      document.getElementById('archivoEjercicio').addEventListener('change', handleFileSelect);
+    }
+
+    // Cargar ejercicios en la vista pública
+    function loadPublicEjercicios() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          ejerciciosData = data;
+          displayPublicEjercicios(data);
+          document.getElementById('totalEjercicios').textContent = data.length;
+          document.getElementById('loadingPublic').style.display = 'none';
+        })
+        .withFailureHandler(function(error) {
+          showMessage('loadingPublic', 'Error al cargar ejercicios: ' + error, 'error');
+        })
+        .obtenerEjercicios();
+    }
+
+    // Mostrar ejercicios en la vista pública
+    function displayPublicEjercicios(ejercicios) {
+      const container = document.getElementById('ejerciciosPublic');
+      
+      if (ejercicios.length === 0) {
+        container.innerHTML = '<div class="message info">No hay ejercicios disponibles aún.</div>';
+        return;
+      }
+
+      let html = '';
+      ejercicios.forEach(ejercicio => {
+        html += `
+          <div class="ejercicio-card">
+            <h3>${ejercicio.nombre}</h3>
+            <div class="ejercicio-info">
+              <div><strong>Archivo:</strong> ${ejercicio.nombreOriginal}</div>
+              <div><strong>Subido:</strong> ${ejercicio.fechaSubida}</div>
+              <div><strong>Descargas:</strong> ${ejercicio.descargas}</div>
+            </div>
+            <div class="ejercicio-actions">
+              <button class="btn action-btn" onclick="descargarEjercicio('${ejercicio.id}', '${ejercicio.url}')">📥 Descargar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Manejar la selección de archivo
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.type !== 'application/pdf') {
+          showMessage('archivoInfo', 'Solo se permiten archivos PDF', 'error');
+          document.getElementById('archivoInfo').classList.remove('hidden');
+          return;
+        }
+
+        const fileInfo = `
+          <strong>Archivo seleccionado:</strong> ${file.name}<br>
+          <strong>Tamaño:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+          <strong>Tipo:</strong> ${file.type}
+        `;
+        document.getElementById('archivoInfo').innerHTML = fileInfo;
+        document.getElementById('archivoInfo').classList.remove('hidden');
+      } else {
+        document.getElementById('archivoInfo').classList.add('hidden');
+      }
+    }
+
+    // Subir ejercicio
+    function subirEjercicio() {
+      const nombre = document.getElementById('nombreEjercicio').value.trim();
+      const archivoInput = document.getElementById('archivoEjercicio');
+      const file = archivoInput.files[0];
+
+      if (!nombre) {
+        showMessage('uploadMessage', 'Por favor ingrese el nombre del ejercicio', 'error');
+        return;
+      }
+
+      if (!file) {
+        showMessage('uploadMessage', 'Por favor seleccione un archivo PDF', 'error');
+        return;
+      }
+
+      if (file.type !== 'application/pdf') {
+        showMessage('uploadMessage', 'Solo se permiten archivos PDF', 'error');
+        return;
+      }
+
+      // Leer el archivo como base64
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const archivoBase64 = e.target.result.split(',')[1]; // Obtener solo la parte base64
+        
+        const datos = {
+          nombre: nombre,
+          archivoBase64: archivoBase64,
+          tipoArchivo: file.type,
+          nombreOriginal: file.name,
+          tamano: file.size
+        };
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            if (result.exito) {
+              showMessage('uploadMessage', result.mensaje, 'success');
+              document.getElementById('nombreEjercicio').value = '';
+              document.getElementById('archivoEjercicio').value = '';
+              document.getElementById('archivoInfo').classList.add('hidden');
+              loadPublicEjercicios(); // Actualizar lista pública
+              loadAdminEjercicios(); // Actualizar lista admin
+            } else {
+              showMessage('uploadMessage', result.mensaje, 'error');
+            }
+          })
+          .withFailureHandler(function(error) {
+            showMessage('uploadMessage', 'Error al subir ejercicio: ' + error, 'error');
+          })
+          .subirEjercicio(datos);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Descargar ejercicio
+    function descargarEjercicio(id, url) {
+      // Registrar la descarga
+      google.script.run.registrarDescarga(id);
+      
+      // Abrir el archivo en una nueva pestaña
+      window.open(url, '_blank');
+    }
+
+    // Mostrar formulario de login admin
+    function showAdminLogin() {
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('publicView').style.display = 'none';
+    }
+
+    // Ocultar vista de admin
+    function hideAdminView() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('adminPanel').classList.add('hidden');
+      document.getElementById('publicView').style.display = 'block';
+      clearMessage('loginMessage');
+      clearMessage('adminMessage');
+    }
+
+    // Login de administrador
+    function login() {
+      const usuario = document.getElementById('adminUser').value;
+      const contrasena = document.getElementById('adminPass').value;
+
+      if (!usuario || !contrasena) {
+        showMessage('loginMessage', 'Por favor ingrese usuario y contraseña', 'error');
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.autenticado) {
+            isAuthenticated = true;
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('publicView').style.display = 'none';
+            showMessage('loginMessage', result.mensaje, 'success');
+            loadAdminEjercicios();
+          } else {
+            showMessage('loginMessage', result.mensaje, 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          showMessage('loginMessage', 'Error en la autenticación: ' + error, 'error');
+        })
+        .autenticar(usuario, contrasena);
+    }
+
+    // Logout de administrador
+    function logout() {
+      isAuthenticated = false;
+      document.getElementById('adminPanel').classList.add('hidden');
+      document.getElementById('publicView').style.display = 'block';
+      clearMessage('adminMessage');
+    }
+
+    // Mostrar sección de admin
+    function showAdminSection(section) {
+      document.getElementById('uploadSection').classList.add('hidden');
+      document.getElementById('listSection').classList.add('hidden');
+      
+      if (section === 'upload') {
+        document.getElementById('uploadSection').classList.remove('hidden');
+      } else if (section === 'list') {
+        document.getElementById('listSection').classList.remove('hidden');
+        loadAdminEjercicios();
+      }
+    }
+
+    // Cargar ejercicios en la vista de admin
+    function loadAdminEjercicios() {
+      document.getElementById('loadingAdmin').style.display = 'block';
+      
+      google.script.run
+        .withSuccessHandler(function(data) {
+          ejerciciosData = data;
+          displayAdminEjercicios(data);
+          document.getElementById('loadingAdmin').style.display = 'none';
+        })
+        .withFailureHandler(function(error) {
+          showMessage('adminMessage', 'Error al cargar ejercicios: ' + error, 'error');
+          document.getElementById('loadingAdmin').style.display = 'none';
+        })
+        .obtenerEjercicios();
+    }
+
+    // Mostrar ejercicios en la vista de admin
+    function displayAdminEjercicios(ejercicios) {
+      const container = document.getElementById('ejerciciosAdmin');
+      
+      if (ejercicios.length === 0) {
+        container.innerHTML = '<div class="message info">No hay ejercicios registrados.</div>';
+        return;
+      }
+
+      let html = '';
+      ejercicios.forEach(ejercicio => {
+        html += `
+          <div class="ejercicio-card">
+            <h3>${ejercicio.nombre}</h3>
+            <div class="ejercicio-info">
+              <div><strong>Archivo:</strong> ${ejercicio.nombreOriginal}</div>
+              <div><strong>Subido:</strong> ${ejercicio.fechaSubida}</div>
+              <div><strong>Descargas:</strong> ${ejercicio.descargas}</div>
+            </div>
+            <div class="ejercicio-actions">
+              <button class="btn action-btn btn-warning" onclick="editarEjercicio('${ejercicio.id}')">✏️ Editar</button>
+              <button class="btn action-btn btn-danger" onclick="eliminarEjercicio('${ejercicio.id}')">🗑️ Eliminar</button>
+              <button class="btn action-btn" onclick="descargarEjercicio('${ejercicio.id}', '${ejercicio.url}')">📥 Descargar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Editar ejercicio
+    function editarEjercicio(id) {
+      const ejercicio = ejerciciosData.find(e => e.id === id);
+      if (!ejercicio) {
+        showMessage('adminMessage', 'Ejercicio no encontrado', 'error');
+        return;
+      }
+
+      const nuevoNombre = prompt('Editar nombre del ejercicio:', ejercicio.nombre);
+      if (nuevoNombre !== null && nuevoNombre.trim() !== '') {
+        const datos = {
+          id: id,
+          nombre: nuevoNombre.trim()
+        };
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            if (result.exito) {
+              showMessage('adminMessage', result.mensaje, 'success');
+              loadAdminEjercicios();
+              loadPublicEjercicios(); // Actualizar también la vista pública
+            } else {
+              showMessage('adminMessage', result.mensaje, 'error');
+            }
+          })
+          .withFailureHandler(function(error) {
+            showMessage('adminMessage', 'Error al actualizar ejercicio: ' + error, 'error');
+          })
+          .actualizarEjercicio(datos);
+      }
+    }
+
+    // Eliminar ejercicio
+    function eliminarEjercicio(id) {
+      if (confirm('¿Está seguro que desea eliminar este ejercicio? Esta acción no se puede deshacer.')) {
+        google.script.run
+          .withSuccessHandler(function(result) {
+            if (result.exito) {
+              showMessage('adminMessage', result.mensaje, 'success');
+              loadAdminEjercicios();
+              loadPublicEjercicios(); // Actualizar también la vista pública
+            } else {
+              showMessage('adminMessage', result.mensaje, 'error');
+            }
+          })
+          .withFailureHandler(function(error) {
+            showMessage('adminMessage', 'Error al eliminar ejercicio: ' + error, 'error');
+          })
+          .eliminarEjercicio(id);
+      }
+    }
+
+    // Mostrar mensaje
+    function showMessage(containerId, message, type) {
+      const container = document.getElementById(containerId);
+      let className = 'message';
+      
+      switch(type) {
+        case 'success': className += ' success'; break;
+        case 'error': className += ' error'; break;
+        case 'info': className += ' info'; break;
+      }
+      
+      container.innerHTML = `<div class="${className}">${message}</div>`;
+    }
+
+    // Limpiar mensaje
+    function clearMessage(containerId) {
+      document.getElementById(containerId).innerHTML = '';
+    }
+
+    // Inicializar la aplicación cuando se carge la página
+    document.addEventListener('DOMContentLoaded', initializeApp);
+  </script>
+</body>
+</html>
