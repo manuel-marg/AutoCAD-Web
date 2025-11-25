@@ -245,41 +245,109 @@
       }
     }
 
-    function subirEjercicio() {
-      const nombre = document.getElementById('nombreEjercicio').value.trim();
-      const file = document.getElementById('archivoEjercicio').files[0];
-      if (!nombre) { showMessage('uploadMessage', 'Por favor ingrese el nombre del ejercicio.', 'error'); return; }
-      if (!file) { showMessage('uploadMessage', 'Por favor seleccione un archivo PDF.', 'error'); return; }
-      if (file.type !== 'application/pdf') { showMessage('uploadMessage', 'Solo se permiten archivos PDF.', 'error'); return; }
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const datos = {
-          nombre: nombre,
-          archivoBase64: e.target.result.split(',')[1],
-          tipoArchivo: file.type,
-          nombreOriginal: file.name,
-          tamano: file.size
-        };
-        showMessage('uploadMessage', 'Subiendo archivo, por favor espere...', 'info');
-        google.script.run
-          .withSuccessHandler(result => {
-            if (result.exito) {
-              showMessage('uploadMessage', result.mensaje, 'success');
-              document.getElementById('nombreEjercicio').value = '';
-              document.getElementById('archivoEjercicio').value = '';
-              document.getElementById('archivoInfo').classList.add('hidden');
-              loadPublicEjercicios();
-              loadAdminEjercicios();
-            } else {
-              showMessage('uploadMessage', result.mensaje, 'error');
-            }
-          })
-          .withFailureHandler(error => showMessage('uploadMessage', 'Error al subir: ' + error.message, 'error'))
-          .subirEjercicio(datos);
-      };
-      reader.readAsDataURL(file);
-    }
+        function subirEjercicio() {
+
+          const nombre = document.getElementById('nombreEjercicio').value.trim();
+
+          const file = document.getElementById('archivoEjercicio').files[0];
+
+          if (!nombre) { showMessage('uploadMessage', 'Por favor ingrese el nombre del ejercicio.', 'error'); return; }
+
+          if (!file) { showMessage('uploadMessage', 'Por favor seleccione un archivo PDF.', 'error'); return; }
+
+          if (file.type !== 'application/pdf') { showMessage('uploadMessage', 'Solo se permiten archivos PDF.', 'error'); return; }
+
+          
+
+          const uploadButton = document.querySelector('#uploadSection button[onclick="subirEjercicio()"]');
+
+          const originalButtonContent = uploadButton.innerHTML;
+
+          
+
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+
+            const datos = {
+
+              nombre: nombre,
+
+              archivoBase64: e.target.result.split(',')[1],
+
+              tipoArchivo: file.type,
+
+              nombreOriginal: file.name,
+
+              tamano: file.size
+
+            };
+
+            
+
+            uploadButton.disabled = true;
+
+            uploadButton.innerHTML = `
+
+              <svg class="animate-spin -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+
+              </svg>
+
+              <span>Subiendo...</span>`;
+
+    
+
+            google.script.run
+
+              .withSuccessHandler(result => {
+
+                uploadButton.disabled = false;
+
+                uploadButton.innerHTML = originalButtonContent;
+
+                if (result.exito) {
+
+                  showMessage('uploadMessage', result.mensaje, 'success');
+
+                  document.getElementById('nombreEjercicio').value = '';
+
+                  document.getElementById('archivoEjercicio').value = '';
+
+                  document.getElementById('archivoInfo').classList.add('hidden');
+
+                  loadPublicEjercicios();
+
+                  loadAdminEjercicios();
+
+                } else {
+
+                  showMessage('uploadMessage', result.mensaje, 'error');
+
+                }
+
+              })
+
+              .withFailureHandler(error => {
+
+                uploadButton.disabled = false;
+
+                uploadButton.innerHTML = originalButtonContent;
+
+                showMessage('uploadMessage', 'Error al subir: ' + error.message, 'error');
+
+              })
+
+              .subirEjercicio(datos);
+
+          };
+
+          reader.readAsDataURL(file);
+
+        }
 
     function descargarEjercicio(id, url) {
       google.script.run.registrarDescarga(id);
@@ -297,11 +365,25 @@
     function login() {
       const usuario = document.getElementById('adminUser').value;
       const contrasena = document.getElementById('adminPass').value;
-      if (!usuario || !contrasena) { showMessage('loginMessage', 'Ingrese usuario y contraseña.', 'error'); return; }
+      if (!usuario || !contrasena) { 
+        showMessage('loginMessage', 'Ingrese usuario y contraseña.', 'error'); 
+        return; 
+      }
       
-      showMessage('loginMessage', 'Autenticando...', 'info');
+      const loginButton = document.querySelector('#loginForm button[onclick="login()"]');
+      const originalButtonContent = loginButton.innerHTML;
+      loginButton.disabled = true;
+      loginButton.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Autenticando...</span>`;
+
       google.script.run
         .withSuccessHandler(result => {
+          loginButton.disabled = false;
+          loginButton.innerHTML = originalButtonContent;
           if (result.autenticado) {
             isAuthenticated = true;
             document.getElementById('publicView').classList.add('hidden');
@@ -312,7 +394,11 @@
             showMessage('loginMessage', result.mensaje, 'error');
           }
         })
-        .withFailureHandler(error => showMessage('loginMessage', 'Error de autenticación: ' + error.message, 'error'))
+        .withFailureHandler(error => {
+          loginButton.disabled = false;
+          loginButton.innerHTML = originalButtonContent;
+          showMessage('loginMessage', 'Error de autenticación: ' + error.message, 'error');
+        })
         .autenticar(usuario, contrasena);
     }
 
@@ -371,41 +457,96 @@
             <p><strong>Subido:</strong> ${ejercicio.fechaSubida}</p>
             <p><strong>Descargas:</strong> ${ejercicio.descargas}</p>
           </div>
-          <div class="mt-4 flex gap-2">
-            <button onclick="editarEjercicio('${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-yellow-500/10 text-yellow-600 text-xs font-bold hover:bg-yellow-500/20 transition-colors">
-              <span class="material-symbols-outlined text-sm">edit</span><span>Editar</span>
-            </button>
-            <button onclick="eliminarEjercicio('${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-red-500/10 text-red-500 text-xs font-bold hover:bg-red-500/20 transition-colors">
-              <span class="material-symbols-outlined text-sm">delete</span><span>Eliminar</span>
-            </button>
-          </div>
+                    <div class="mt-4 flex gap-2">
+                      <button onclick="editarEjercicio(this, '${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-yellow-500/10 text-yellow-600 text-xs font-bold hover:bg-yellow-500/20 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span><span>Editar</span>
+                      </button>
+                      <button onclick="eliminarEjercicio(this, '${ejercicio.id}')" class="flex-1 flex items-center justify-center gap-1 rounded-lg h-8 px-3 bg-red-500/10 text-red-500 text-xs font-bold hover:bg-red-500/20 transition-colors">
+                        <span class="material-symbols-outlined text-sm">delete</span><span>Eliminar</span>
+                      </button>
+                    </div>
         `;
         container.appendChild(card);
       });
     }
 
-    function editarEjercicio(id) {
-      const ejercicio = ejerciciosData.find(e => e.id === id);
-      if (!ejercicio) { showMessage('adminMessage', 'Ejercicio no encontrado', 'error'); return; }
-      const nuevoNombre = prompt('Editar nombre del ejercicio:', ejercicio.nombre);
-      if (nuevoNombre && nuevoNombre.trim() !== '') {
-        google.script.run
-          .withSuccessHandler(result => {
-            if (result.exito) {
-              showMessage('adminMessage', 'Ejercicio actualizado.', 'success');
-              loadAdminEjercicios();
-              loadPublicEjercicios();
-            } else {
-              showMessage('adminMessage', result.mensaje, 'error');
-            }
-          })
-          .withFailureHandler(error => showMessage('adminMessage', 'Error al actualizar: ' + error.message, 'error'))
-          .actualizarEjercicio({ id: id, nombre: nuevoNombre.trim() });
-      }
-    }
+        function editarEjercicio(button, id) {
 
-    function eliminarEjercicio(id) {
+          const ejercicio = ejerciciosData.find(e => e.id === id);
+
+          if (!ejercicio) { showMessage('adminMessage', 'Ejercicio no encontrado', 'error'); return; }
+
+          const nuevoNombre = prompt('Editar nombre del ejercicio:', ejercicio.nombre);
+
+          if (nuevoNombre && nuevoNombre.trim() !== '') {
+
+    
+
+            const originalButtonContent = button.innerHTML;
+
+            const deleteButton = button.nextElementSibling;
+
+            button.disabled = true;
+
+            deleteButton.disabled = true;
+
+            button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
+    
+
+            google.script.run
+
+              .withSuccessHandler(result => {
+
+                if (result.exito) {
+
+                  showMessage('adminMessage', 'Ejercicio actualizado.', 'success');
+
+                  loadAdminEjercicios();
+
+                  loadPublicEjercicios();
+
+                } else {
+
+                  button.disabled = false;
+
+                  deleteButton.disabled = false;
+
+                  button.innerHTML = originalButtonContent;
+
+                  showMessage('adminMessage', result.mensaje, 'error');
+
+                }
+
+              })
+
+              .withFailureHandler(error => {
+
+                button.disabled = false;
+
+                deleteButton.disabled = false;
+
+                button.innerHTML = originalButtonContent;
+
+                showMessage('adminMessage', 'Error al actualizar: ' + error.message, 'error');
+
+              })
+
+              .actualizarEjercicio({ id: id, nombre: nuevoNombre.trim() });
+
+          }
+
+        }
+
+    function eliminarEjercicio(button, id) {
       if (confirm('¿Está seguro que desea eliminar este ejercicio?')) {
+        
+        const originalButtonContent = button.innerHTML;
+        const editButton = button.previousElementSibling;
+        button.disabled = true;
+        editButton.disabled = true;
+        button.innerHTML = `<svg class="animate-spin h-4 w-4 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
         google.script.run
           .withSuccessHandler(result => {
             if (result.exito) {
@@ -413,10 +554,18 @@
               loadAdminEjercicios();
               loadPublicEjercicios();
             } else {
+              button.disabled = false;
+              editButton.disabled = false;
+              button.innerHTML = originalButtonContent;
               showMessage('adminMessage', result.mensaje, 'error');
             }
           })
-          .withFailureHandler(error => showMessage('adminMessage', 'Error al eliminar: ' + error.message, 'error'))
+          .withFailureHandler(error => {
+            button.disabled = false;
+            editButton.disabled = false;
+            button.innerHTML = originalButtonContent;
+            showMessage('adminMessage', 'Error al eliminar: ' + error.message, 'error');
+          })
           .eliminarEjercicio(id);
       }
     }
